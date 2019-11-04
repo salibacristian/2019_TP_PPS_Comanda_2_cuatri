@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ActorTypeBase } from '../model/actorTypeBase';
+import { Producto } from '../model/producto';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +10,8 @@ import { ActorTypeBase } from '../model/actorTypeBase';
 export class ComandaServiceService {
 
   constructor(
-    private firestore: AngularFirestore) { }
+    private firestore: AngularFirestore,
+    private afAuth: AngularFireAuth) { }
 
   public saveActorType(actorType: ActorTypeBase) {
     this.firestore.collection('Empleados').add({
@@ -18,6 +21,18 @@ export class ComandaServiceService {
       cuil: actorType.cuil,
       image: actorType.image,
       type: actorType.type
+    });
+  }
+
+  public saveProductos(producto: Producto) {
+    this.firestore.collection('Productos').add({
+      name: producto.name,
+      descripcion: producto.descripcion,
+      tiempo: producto.tiempo,
+      precio: producto.precio,
+      image: producto.image.toString()
+      // image: actorType.image,
+      // type: actorType.type
     });
   }
 }

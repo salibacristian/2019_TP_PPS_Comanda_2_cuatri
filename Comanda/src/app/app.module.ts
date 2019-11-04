@@ -14,6 +14,9 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { Camera } from '@ionic-native/camera/ngx';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+// import { ImagePicker } from '@ionic-native/image-picker/ngx';
+
+
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAWUuOEwKZrD3jBv6Jxq-DmQ-hZSdNupiw',
@@ -39,6 +42,7 @@ const firebaseConfig = {
     SplashScreen,
     Camera,
     BarcodeScanner,
+   
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

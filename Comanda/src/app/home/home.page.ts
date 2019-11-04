@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, MenuController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -8,10 +8,13 @@ import { NavController, MenuController } from '@ionic/angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController, private menu: MenuController) {}
+  constructor(public navCtrl: NavController) {}
 
-  add(typeEmployed) {
-    this.navCtrl.navigateRoot(['alta', typeEmployed]);
+  prueba() {
+    this.navCtrl.navigateRoot('alta');
   }
 
+  pruebaprod() {
+    this.navCtrl.navigateRoot('alta-productos');
+  }
 }
