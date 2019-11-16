@@ -15,13 +15,20 @@
 <h2>Entrega Sabado 9/11:</h2>
 <ul>
     <li> Saliba Cristian:</li>
-        -ALTA mesa<br>
-        -QR mesa<br>
+        -ALTA mesa<b>HECHO</b><br>
     <li>Perez Hernan:</li> 
         -ALTA empleados <b>HECHO</b><br>
-        -QR lista de espera<br>
     <li>Narvaja Juan Ignacio:</li>
-        -ALTA cliente<br>
-        -QR propina<br>
+        -ALTA cliente<br><b>Proximo Sprint</b><br>
+</ul>
+<h2>Entrega Sabado 16/11:</h2>
+<ul>
+    <li> Saliba Cristian:</li>
+    <li>Perez Hernan:</li> 
+        -lista de espera <b>HECHO</b><br>    
+        -El metre procede a la asignación de una mesa. El cliente escanea el código Qr de la mesa asignada <b>HECHO</b><br>  
+    <li>Narvaja Juan Ignacio:</li>
+      -Crear un cliente nuevo<b>HECHO</b><br>
+      -Verificar que el pre-registro se visualice en el listado de clientes pendientes de aprobación del dueño o supervisor<b>HECHO</b><br> 
 </ul>
 
