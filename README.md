@@ -31,4 +31,14 @@
       -Crear un cliente nuevo<b>HECHO</b><br>
       -Verificar que el pre-registro se visualice en el listado de clientes pendientes de aprobación del dueño o supervisor<b>HECHO</b><br> 
 </ul>
+<h2>Entrega Sabado 23/11:</h2>
+<ul>
+    <li> Saliba Cristian:</li>
+    -punto 8<br>
+    <li>Perez Hernan:</li> 
+        -encuesta<br>    
+    <li>Narvaja Juan Ignacio:</li>
+      -punto 13 y 14<br>
+      
+</ul>
 
