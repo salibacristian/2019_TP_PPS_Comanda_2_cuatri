@@ -10,29 +10,49 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AngularFireModule } from 'angularfire2';
-import { AngularFireAuthModule } from 'angularfire2/auth'
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { Camera } from '@ionic-native/camera/ngx';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { NgxPermissionsModule } from 'ngx-permissions';
+import { ZBar } from '@ionic-native/zbar/ngx';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { FormsModule } from '@angular/forms';
+import { ChartsModule } from 'ng2-charts';
+import { DetallePedidoModalPage } from './modals/detalle-pedido-modal/detalle-pedido-modal.page';
+import { AlertModalPage } from './modals/alert-modal/alert-modal.page';
+import { FiltroPedidosPipe } from './pipes/filtro-pedidos.pipe';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAWUuOEwKZrD3jBv6Jxq-DmQ-hZSdNupiw",
-  authDomain: "comanda-b3a06.firebaseapp.com",
-  databaseURL: "https://comanda-b3a06.firebaseio.com",
-  projectId: "comanda-b3a06",
-  storageBucket: "comanda-b3a06.appspot.com",
-  messagingSenderId: "352992039655",
-  appId: "1:352992039655:web:4f42327f3ecd44248b0842"
+  apiKey: 'AIzaSyAWUuOEwKZrD3jBv6Jxq-DmQ-hZSdNupiw',
+  authDomain: 'comanda-b3a06.firebaseapp.com',
+  databaseURL: 'https://comanda-b3a06.firebaseio.com',
+  projectId: 'comanda-b3a06',
+  storageBucket: 'comanda-b3a06.appspot.com',
+  messagingSenderId: '352992039655',
+  appId: '1:352992039655:web:4f42327f3ecd44248b0842'
 };
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, DetallePedidoModalPage, AlertModalPage],
+  entryComponents: [DetallePedidoModalPage, AlertModalPage],
   imports: [BrowserModule
     , IonicModule.forRoot()
     , AppRoutingModule
     , AngularFireModule.initializeApp(firebaseConfig)
-    , AngularFireAuthModule],
+    , AngularFireAuthModule
+    , AngularFirestoreModule
+    , NgxPermissionsModule
+    , FormsModule
+    , ChartsModule 
+    ],
   providers: [
     StatusBar,
     SplashScreen,
+    Camera,
+    BarcodeScanner,
+    ZBar,
+    SocialSharing,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
