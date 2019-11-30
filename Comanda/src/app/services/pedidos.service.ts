@@ -11,21 +11,27 @@ export class PedidosService {
 
   constructor(private firestore: AngularFirestore) { }
 
-  public AddPedidoToBD(auxPedido:Pedido) {
+  public AddPedidoToBD(auxPedido: Pedido) {
     console.log(auxPedido);
     this.firestore.collection('Lista_Pedidos').add({
-      idAuth:auxPedido.idAuth,
+      idAuth: auxPedido.idAuth,
       total: auxPedido.total,
       estado: auxPedido.estado,
       arrayDetalle: JSON.stringify(auxPedido.arrayDetalle),
-      propina:0,
-      totalPropina:0
+      propina: 0,
+      totalPropina: 0
 
     });
   }
 
   public getPedidos() {
     return this.firestore.collection('Lista_Pedidos').snapshotChanges();
+  }
+
+  public async getPedido(idAuth) {
+    return await this.firestore.collection('Lista_Pedidos').ref
+      .where('idAuth', '==', idAuth)
+      .get();
   }
 
   public async SetEstado(id: string, estado: string) {
@@ -68,8 +74,9 @@ public async SetPropina(auxCliente:Pedido) {
     );
     
   });
-
+ 
 }
+
 public async SetEstadoJ(auxCliente:Pedido,estado:string) {
 
  await this.firestore.collection('Lista_Pedidos').ref.where('idAuth', '==', auxCliente.idAuth).get().then(async (documento) => {
