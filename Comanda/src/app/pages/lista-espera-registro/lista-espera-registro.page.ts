@@ -4,9 +4,10 @@ import { async } from 'q';
 import { Cliente } from 'src/app/model/cliente';
 import { AuthService} from "../../services/auth.service";
 import { Router } from "@angular/router";
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { ComandaServiceService } from 'src/app/services/comanda-service.service';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { AlertModalPage } from 'src/app/modals/alert-modal/alert-modal.page';
 
 @Component({
   selector: 'app-lista-espera-registro',
@@ -20,7 +21,9 @@ export class ListaEsperaRegistroPage implements OnInit {
     public router : Router,
     private alertController: AlertController,
     private comandaService: ComandaServiceService,
-    private socialSharing: SocialSharing) { }
+    private socialSharing: SocialSharing,
+    private modalController: ModalController,
+    ) { }
 
   ngOnInit() {
     this.arrayClientes = [];
@@ -56,7 +59,7 @@ export class ListaEsperaRegistroPage implements OnInit {
       try{
         let retorno = await this.authService.registerUser(item.email,item.password);
       let rol = this.comandaService.saveRol(retorno['user']['uid'],item.type);
-      this.presentAlert("Cargado con exito");
+      this.presentModalCustom("Info","Cargado con exito");
       this.enviarMailSucces(item);
       this.listaEsperaService.removeClienteWaitingList(item);
       item.estado = "ACEPTADO"
@@ -64,7 +67,7 @@ export class ListaEsperaRegistroPage implements OnInit {
       //persistir clientes en bd
       }
      catch (error) {
-      this.presentAlert(error.message);
+      this.presentModalCustom('Error',error.message);
     }
       
         
@@ -83,8 +86,26 @@ export class ListaEsperaRegistroPage implements OnInit {
 
   }
 
+  async presentModalCustom(header: string, message: string) {
+    const modal = await this.modalController.create({
+      component: AlertModalPage,
+      cssClass: header === 'Error' ? 'my-custom-modal-css-error' : 'my-custom-modal-css',
+      componentProps: {
+        header: header,
+        message: message,
+        action: header == 'Error' ? 'error' : header == 'Info' ? 'info' : 'confirm',
+      }
+    });
 
-  async presentAlert(err) {
+    modal.onDidDismiss()
+      .then((data) => {
+      });
+
+    return await modal.present();
+  }
+
+
+  /*async presentAlert(err) {
     const alert = await this.alertController.create({
       header: 'Aviso',
       subHeader: '',
@@ -93,7 +114,7 @@ export class ListaEsperaRegistroPage implements OnInit {
     });
 
     await alert.present();
-  }
+  }*/
 
   enviarMailSucces(cliente:Cliente) {
     this.socialSharing.canShareViaEmail().then(() => {

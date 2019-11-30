@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ComandaServiceService } from 'src/app/services/comanda-service.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { ActorTypeBase } from 'src/app/model/actorTypeBase';
 import { ActorType } from 'src/app/model/actorType';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { Producto } from 'src/app/model/producto';
 import { Imagen } from 'src/app/model/imagenes';
 import { AuthService} from "../../services/auth.service";
+import { Router } from '@angular/router';
+import { AlertModalPage } from 'src/app/modals/alert-modal/alert-modal.page';
 // import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker/ngx';
 @Component({
   selector: 'app-alta-productos',
@@ -36,7 +38,9 @@ export class AltaProductosPage implements OnInit {
     private alertController: AlertController,
     private barcodeScanner: BarcodeScanner,
     private camera: Camera,
-    private authService:AuthService,) { }
+    private authService:AuthService,
+    private modalController: ModalController,
+    public router: Router) { }
 
   ngOnInit() {
     this.myForm = new FormGroup({
@@ -85,7 +89,7 @@ export class AltaProductosPage implements OnInit {
         this.arrayInit= true;
       }
     }, (err) => {
-      this.presentAlert(err);
+      this.presentModalCustom('Error',err);
     });
   }
  
@@ -113,20 +117,38 @@ export class AltaProductosPage implements OnInit {
     if(this.arrayFotos.length != 3) 
     {
       console.log("Tienen que ser 3 fotos");
-      this.presentAlert("El alta tiene que incluir 3 fotos");
+      this.presentModalCustom("Error","El alta tiene que incluir 3 fotos");
     }
     else
     {
     this.comandaService.saveProductos(this.producto);
-    this.alertconfirm("cargado con exito");
+    this.presentModalCustom('Info',"cargado con exito");
     this.encodedData = "Producto: " + this.producto.name + " Descripcion: "+ this.producto.descripcion + " Tiempo:" + 
                         this.producto.tiempo + " Precio: " + this.producto.precio;
     this.encodedText();
     }
 
   }
+
+  async presentModalCustom(header: string, message: string) {
+    const modal = await this.modalController.create({
+      component: AlertModalPage,
+      cssClass: header === 'Error' ? 'my-custom-modal-css-error' : 'my-custom-modal-css',
+      componentProps: {
+        header: header,
+        message: message,
+        action: header == 'Error' ? 'error' : header == 'Info' ? 'info' : 'confirm',
+      }
+    });
+
+    modal.onDidDismiss()
+      .then((data) => {
+      });
+
+    return await modal.present();
+  }
 //#region alerts
-  async presentAlert(err) {
+  /*async presentAlert(err) {
     const alert = await this.alertController.create({
       header: 'Aviso',
       subHeader: 'Error',
@@ -135,8 +157,8 @@ export class AltaProductosPage implements OnInit {
     });
 
     await alert.present();
-  }
-  async alertconfirm(err) {
+  }*/
+  /*async alertconfirm(err) {
     const alert = await this.alertController.create({
       header: 'Aviso',
       subHeader: 'Confirmacion',
@@ -145,7 +167,7 @@ export class AltaProductosPage implements OnInit {
     });
 
     await alert.present();
-  }
+  }*/
 //#endregion
 
   cargarimagenPrueba(){

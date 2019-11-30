@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ComandaServiceService } from 'src/app/services/comanda-service.service';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, ModalController } from '@ionic/angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { Table, TableType } from '../../model/table';
 import { MesaService } from 'src/app/services/mesa.service';
+import { AlertModalPage } from 'src/app/modals/alert-modal/alert-modal.page';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-alta-mesa',
@@ -24,7 +26,9 @@ export class AltaMesaPage implements OnInit {
     private barcodeScanner: BarcodeScanner,
     private camera: Camera,
     public navCtrl: NavController,
-    private mesaService: MesaService) { }
+    private mesaService: MesaService,
+    private modalController: ModalController,
+    public router: Router) { }
 
   ngOnInit() {
     this.myForm = new FormGroup({
@@ -52,7 +56,7 @@ export class AltaMesaPage implements OnInit {
         this.image = `data:image/jpeg;base64,${imageData}`;
       }
     }, (err) => {
-      this.presentAlert(err);
+      this.presentModalCustom('Error',err);
     });
   }
 
@@ -75,13 +79,35 @@ export class AltaMesaPage implements OnInit {
         }, (err) => {
           console.log("Error occured : " + err);
         });
-      this.presentAlertSuccess('El alta se realizo exitosamente');
+      this.presentModalCustom('Home', 'El alta se realizo exitosamente');
     } catch (error) {
-      this.presentAlertSuccess(error.message);
+      this.presentModalCustom('Home', error.message);
     }
   }
 
-  async presentAlert(err) {
+  async presentModalCustom(header: string, message: string) {
+    const modal = await this.modalController.create({
+      component: AlertModalPage,
+      cssClass: header === 'Error' ? 'my-custom-modal-css-error' : 'my-custom-modal-css',
+      componentProps: {
+        header: header === 'Home' ? 'Info' : header,
+        message: message,
+        action: header == 'Error' ? 'error' : header == 'Info' ? 'info' : header == 'Home' ? 'home' : 'confirm',
+      }
+    });
+
+    modal.onDidDismiss()
+      .then((data) => {
+        if(data['dismissed']) {
+
+        } else
+          this.router.navigate(['home']);
+      });
+
+    return await modal.present();
+  }
+
+  /*async presentAlert(err) {
     const alert = await this.alertController.create({
       header: 'Aviso',
       subHeader: 'Error',
@@ -114,7 +140,7 @@ export class AltaMesaPage implements OnInit {
     });
 
     await alert.present();
-  }
+  }*/
 
 
 }

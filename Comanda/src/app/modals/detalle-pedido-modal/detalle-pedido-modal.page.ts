@@ -3,6 +3,7 @@ import { Pedido } from '../../model/pedido';
 import { ModalController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { PedidosService } from '../../services/pedidos.service';
+import { AlertModalPage } from '../alert-modal/alert-modal.page';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class DetallePedidoModalPage implements OnInit {
 
   async cambiarEstado(pedido: Pedido, estado: string) {
     await this.pedidosService.SetEstado(pedido.id, estado);
-    this.presentAlert(estado);
+    //this.presentAlert(estado);
+    this.presentModalCustom('Info', estado);
   }
 
 
@@ -38,10 +40,29 @@ export class DetallePedidoModalPage implements OnInit {
     });
   }
 
+  async presentModalCustom(header: string, message: string) {
+    const modal = await this.modalController.create({
+      component: AlertModalPage,
+      cssClass: header === 'Error' ? 'my-custom-modal-css-error' : 'my-custom-modal-css',
+      componentProps: {
+        header: header,
+        message: message,
+        action: header == 'Error' ? 'error' : header == 'Info' ? 'info' : 'confirm',
+      }
+    });
+
+    modal.onDidDismiss()
+      .then((data) => {
+        //this.router.navigate(['home']);
+      });
+
+    return await modal.present();
+  }
+
   async presentAlert(estado: string) {
     const alert = await this.alertController.create({
       header: estado,
-      message: 'operación realizada exitosamente'    
+      message: 'operación realizada exitosamente'
     });
 
     await alert.present();

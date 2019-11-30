@@ -39,4 +39,10 @@ export class AlertModalPage implements OnInit {
     });
   }
 
+  redirectHome() {
+    this.modalCtrl.dismiss({
+      'redirectHome': true
+    });
+  }
+
 }

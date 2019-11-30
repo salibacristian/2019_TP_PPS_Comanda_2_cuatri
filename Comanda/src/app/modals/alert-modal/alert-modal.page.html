@@ -16,6 +16,15 @@
 
 <ion-footer>
   <ion-toolbar>
+    <ion-segment *ngIf="action == 'home'">
+      <ion-segment-button (click)="redirectHome()">
+        <ion-label>Aceptar</ion-label>
+      </ion-segment-button>
+      <ion-segment-button (click)="cerrar()">
+        <ion-label>Cancelar</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
     <ion-segment *ngIf="action == 'confirm'">
       <ion-segment-button (click)="asignar()">
         <ion-label>Aceptar</ion-label>

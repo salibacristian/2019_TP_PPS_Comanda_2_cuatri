@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { ComandaServiceService } from 'src/app/services/comanda-service.service';
+import { AlertModalPage } from 'src/app/modals/alert-modal/alert-modal.page';
 
 @Component({
   selector: 'app-login',
@@ -20,24 +21,44 @@ export class LoginPage implements OnInit {
     , private publicRouter: Router
     , public alertController: AlertController
     , private permissionsService: NgxPermissionsService
-    , private comandaService: ComandaServiceService) { }
+    , private comandaService: ComandaServiceService,
+    private modalController: ModalController,
+    ) { }
 
   ngOnInit() {
   }  
 
-  async presentAlert() {
+  async presentModalCustom(header: string, message: string) {
+    const modal = await this.modalController.create({
+      component: AlertModalPage,
+      cssClass: header === 'Error' ? 'my-custom-modal-css-error' : 'my-custom-modal-css',
+      componentProps: {
+        header: header,
+        message: message,
+        action: header == 'Error' ? 'error' : header == 'Info' ? 'info' : 'confirm',
+      }
+    });
+
+    modal.onDidDismiss()
+      .then((data) => {
+      });
+
+    return await modal.present();
+  }
+
+  /*async presentAlert() {
     const alert = await this.alertController.create({
       header: 'Error',
       message: 'Por favor, reingrese.',
       buttons: ['OK']
     });
     await alert.present();
-  }
+  }*/
 
   OnSubmitLogIn() {
     this.authService.logIn(this.email, this.password).then(res => {
       this.loadPermissions(res['user']['uid']);      
-    }).catch(err => { console.log(err); this.presentAlert() });
+    }).catch(err => { console.log(err); this.presentModalCustom('Error', 'Por favor, reingrese.') });
   }
 
   autocompletar(email, password) {

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ZBar, ZBarOptions } from '@ionic-native/zbar/ngx';
-import { NavController, AlertController } from '@ionic/angular';
+import { NavController, AlertController, ModalController } from '@ionic/angular';
 import {PedidosService} from '../../services/pedidos.service';
 import { Pedido } from '../../model/pedido';
 import { AuthService } from 'src/app/services/auth.service';
+import { AlertModalPage } from 'src/app/modals/alert-modal/alert-modal.page';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,7 +21,9 @@ export class PropinasPage implements OnInit {
       public alertController: AlertController,
       public navCtrl: NavController,
       public pedidosService:PedidosService,
-      public auth:AuthService) { }
+      public auth:AuthService,
+      private modalController: ModalController,
+      public router: Router) { }
 
   async ngOnInit() {
     //this.setPropinaBD(); //esto se llamaria en caso de exito en la funcion scanner
@@ -36,23 +40,43 @@ export class PropinasPage implements OnInit {
           if(result == '0' || result  == '5' || result == '10' || result =='15' || result =='20') {
             this.porcentajePropina = Number(result);
             this.setPropinaBD();
-            this.presentAlert("Bien","Se aplico una propina del  " + this.porcentajePropina + " % ");
+            this.presentModalCustom("Info","Se aplico una propina del  " + this.porcentajePropina + " % ");
             // this.setPropinaBD();
           }
           else
           {
-            this.presentAlert('Error', 'El codigo qr no es valido');
+            this.presentModalCustom('Error', 'El codigo qr no es valido');
           }
       })
       .catch(error => {
-        this.presentAlert('Error', error.message);
+        this.presentModalCustom('Error', error.message);
       });
+  }
+
+  async presentModalCustom(header: string, message: string) {
+    const modal = await this.modalController.create({
+      component: AlertModalPage,
+      cssClass: header === 'Error' ? 'my-custom-modal-css-error' : 'my-custom-modal-css',
+      componentProps: {
+        header: header,
+        message: message,
+        action: header == 'Error' ? 'error' : header == 'Info' ? 'info' : 'confirm',
+      }
+    });
+
+    modal.onDidDismiss()
+      .then((data) => {
+        this.router.navigate(['home']);
+      });
+
+    return await modal.present();
   }
 
 
 
 
-  async presentAlert(headerMsj, msj) {
+
+  /*async presentAlert(headerMsj, msj) {
     const alert = await this.alertController.create({
       header: headerMsj,
       message: msj,
@@ -64,7 +88,7 @@ export class PropinasPage implements OnInit {
       }]
     });
         await alert.present();
-    }
+    }*/
 
 
      setPropinaBD() {

@@ -56,32 +56,19 @@ export class PedidosService {
       console.log(documento.docs[0].id);
       // console.log('EncontrÃ© el voto', votos.users);
 
-<<<<<<< HEAD
-}
-public async SetEstadoJ(auxCliente:Pedido,estado:string) {
+    });
+  }
 
- await this.firestore.collection('Lista_Pedidos').ref.where('idAuth', '==', auxCliente.idAuth).get().then(async (documento) => {
+  public async SetEstadoJ(auxCliente: Pedido, estado: string) {
 
-   console.log(documento.docs[0].id);
-   // console.log('EncontrÃ© el voto', votos.users);
-   
-   this.firestore.collection('Lista_Pedidos').doc(documento.docs[0].id).set({
-     arrayDetalle:JSON.stringify(auxCliente.arrayDetalle),
-     estado:estado,
-     idAuth:auxCliente.idAuth,
-     total:auxCliente.total,
-     propina:auxCliente.propina,
-     totalPropina: auxCliente.totalPropina
-   }//, { merge: true }
-   );
-   
- });
+    await this.firestore.collection('Lista_Pedidos').ref.where('idAuth', '==', auxCliente.idAuth).get().then(async (documento) => {
 
-}
-=======
+      console.log(documento.docs[0].id);
+      // console.log('EncontrÃ© el voto', votos.users);
+
       this.firestore.collection('Lista_Pedidos').doc(documento.docs[0].id).set({
-        arrayDetalle: auxCliente.arrayDetalle,
-        estado: auxCliente.estado,
+        arrayDetalle: JSON.stringify(auxCliente.arrayDetalle),
+        estado: estado,
         idAuth: auxCliente.idAuth,
         total: auxCliente.total,
         propina: auxCliente.propina,
@@ -92,5 +79,5 @@ public async SetEstadoJ(auxCliente:Pedido,estado:string) {
     });
 
   }
->>>>>>> hernan
+    
 }

@@ -88,7 +88,7 @@ export class ListaEsperaPage implements OnInit {
    
   }*/
 
-  async presentAlert(msj) {
+  /*async presentAlert(msj) {
     const alert = await this.alertController.create({
       header: 'Aviso',
       subHeader: 'Prueba',
@@ -97,7 +97,7 @@ export class ListaEsperaPage implements OnInit {
     });
 
     await alert.present();
-  }
+  }*/
 
   async verificarListaEspera() {
     let existe = await this.listaEsperaService.existeEnListaEspera(this.authService.currentUserId());

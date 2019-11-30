@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ComandaServiceService } from 'src/app/services/comanda-service.service';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, ModalController } from '@ionic/angular';
 import { ActorTypeBase } from 'src/app/model/actorTypeBase';
 import { ActorType } from 'src/app/model/actorType';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
@@ -11,6 +11,7 @@ import { timer } from 'rxjs';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { Cliente } from 'src/app/model/cliente';
 import {ListaEsperaService } from 'src/app/services/lista-espera.service'
+import { AlertModalPage } from 'src/app/modals/alert-modal/alert-modal.page';
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
@@ -36,7 +37,8 @@ export class RegisterPage implements OnInit {
     public navCtrl: NavController,
     public activeRoute: ActivatedRoute,
     private splashScreen: SplashScreen,
-    private listaEsperaService:ListaEsperaService) { }
+    private listaEsperaService:ListaEsperaService,
+    private modalController: ModalController) { }
 
   ngOnInit() {
     this.myForm = new FormGroup({
@@ -66,7 +68,7 @@ export class RegisterPage implements OnInit {
         this.image = `data:image/jpeg;base64,${imageData}`;
       }
     }, (err) => {
-      this.presentAlert(err);
+      this.presentModalCustom('Error',err);
     });
   }
 
@@ -80,7 +82,7 @@ export class RegisterPage implements OnInit {
         this.setControlsValues(code, 5, 4, 1, 8);
       }
     }).catch(err => {
-      this.presentAlert(err.message);
+      this.presentModalCustom('Error',err.message);
     });
   }
 
@@ -94,7 +96,7 @@ export class RegisterPage implements OnInit {
     if(this.image == null)
     {
         console.log("Tienen que tener una foto");
-        this.presentAlert("El registro debe incluir minimo una foto , un mail y el nombre");
+        this.presentModalCustom("Error","El registro debe incluir minimo una foto , un mail y el nombre");
       
     } 
     else {
@@ -123,7 +125,25 @@ export class RegisterPage implements OnInit {
 
   }
 
-  async presentAlert(err) {
+  async presentModalCustom(header: string, message: string) {
+    const modal = await this.modalController.create({
+      component: AlertModalPage,
+      cssClass: header === 'Error' ? 'my-custom-modal-css-error' : 'my-custom-modal-css',
+      componentProps: {
+        header: header,
+        message: message,
+        action: header == 'Error' ? 'error' : header == 'Info' ? 'info' : 'confirm',
+      }
+    });
+
+    modal.onDidDismiss()
+      .then((data) => {
+      });
+
+    return await modal.present();
+  }
+
+  /*async presentAlert(err) {
     const alert = await this.alertController.create({
       header: 'Aviso',
       subHeader: 'Error',
@@ -132,7 +152,7 @@ export class RegisterPage implements OnInit {
     });
 
     await alert.present();
-  }
+  }*/
 
   async presentAlertSuccess(mensaje) {
     const alert = await this.alertController.create({
