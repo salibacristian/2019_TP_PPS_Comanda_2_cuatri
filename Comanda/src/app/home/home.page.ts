@@ -72,6 +72,12 @@ export class HomePage implements OnInit {
     if (route === 'lista-espera') {
       this.verificarEstadopedido(route, param);
     }
+    else{
+      if (param)
+        this.router.navigate([route], { queryParams: { tipo: param } });
+      else
+        this.router.navigate([route]);
+    }
   }
 
   async verificarEstadopedido(route, param) {
@@ -86,6 +92,10 @@ export class HomePage implements OnInit {
         else
           this.router.navigate([route]);
     }
+    else if (param)
+      this.router.navigate([route], { queryParams: { tipo: param } });
+    else
+      this.router.navigate([route]);
   }
 
   async presentModalCustom(header: string, message: string) {
