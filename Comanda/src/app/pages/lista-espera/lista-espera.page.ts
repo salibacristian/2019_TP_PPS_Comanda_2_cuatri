@@ -129,6 +129,7 @@ export class ListaEsperaPage implements OnInit {
   }
 
   async verificarMesa(numeroMesa) {
+    this.estadoProgreso = '';
     let progreso = await this.verificarEstadopedido();
     let mesa = await this.mesasService.getTableByClient(this.authService.currentUserId());
     if (mesa.docs.length === 0) {
