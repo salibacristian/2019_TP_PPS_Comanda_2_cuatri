@@ -70,7 +70,7 @@ export class ListaPedidosPage implements OnInit {
       });
       switch (rol) {
         case 'MOZO':
-          filterRef.estadosPedido = ['PENDIENTE','CONFIRMADO','EN PROGRESO', 'TERMINADO', 'RECIBIDO', 'ESPERANDO CUENTA'];
+          filterRef.estadosPedido = ['PENDIENTE','CONFIRMADO','EN PROGRESO', 'TERMINADO', 'ENTREGADO', 'ESPERANDO CUENTA'];
           filterRef.tipoDetallePedido = null;
           break;
         case 'COCINERO':
