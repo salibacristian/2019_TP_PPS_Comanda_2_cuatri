@@ -29,6 +29,7 @@ export class ListaEsperaPage implements OnInit {
   imagenCliente: any;
   tables: any[];
   propina = [5, 10, 15, 20];
+  estadoProgreso: string = "";
 
   constructor(
     private comandaService: ComandaServiceService,
@@ -128,15 +129,27 @@ export class ListaEsperaPage implements OnInit {
   }
 
   async verificarMesa(numeroMesa) {
+    let progreso = await this.verificarEstadopedido();
     let mesa = await this.mesasService.getTableByClient(this.authService.currentUserId());
     if (mesa.docs.length === 0) {
       this.presentModalCustom('Error', 'Esta mesa no le pertenece, puede solicitar una leyando el qr de lista de espera');
     } else {
       let table = mesa.docs[0].data() as Table;
-      mesa.docs.length === 1 && table.number === numeroMesa
+      mesa.docs.length === 1 && table.number === numeroMesa && this.estadoProgreso === 'EN PROGRESO'
+      ? this.presentModalCustom('Info', 'Su pedido esta en progreso')
+      : mesa.docs.length === 1 && table.number === numeroMesa
         ? this.presentModalCustom('Info', 'La mesa se verifico corretamente, puede tomar asiento y realizar su pedido')
         : this.presentModalCustom('Error', 'Esta mesa no le pertenece');
     }
+  }
+
+  async verificarEstadopedido() {
+    const pedidoDoc = await this.pedidosService.getPedido(this.authService.currentUserId());
+    if (pedidoDoc && pedidoDoc.docs && pedidoDoc.docs[0] && pedidoDoc.docs[0].data()) {
+      const pedido: Pedido = pedidoDoc.docs[0].data() as Pedido;
+      if (pedido.estado === 'EN PROGRESO')
+        this.estadoProgreso = 'EN PROGRESO';
+    }        
   }
 
   async presentModalCustom(header: string, message: string) {
