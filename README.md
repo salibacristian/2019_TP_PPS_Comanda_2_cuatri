@@ -41,4 +41,13 @@
       -punto 13 y 14<br>
       
 </ul>
-
+<h2>Entrega Sabado 30/11:</h2>
+<ul>
+    <li> Saliba Cristian:</li>
+    -division por sectores de los pedidos y cambios de estados<br>
+    <li>Perez Hernan:</li> 
+        -encuesta y logica qr<br> 
+    <li>Narvaja Juan Ignacio:</li>
+      -Ver cuenta y logica propina<br>
+      
+</ul>
