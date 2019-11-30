@@ -79,7 +79,7 @@ export class HomePage implements OnInit {
     if (pedidoDoc && pedidoDoc.docs && pedidoDoc.docs[0] && pedidoDoc.docs[0].data()) {
       const pedido: Pedido = pedidoDoc.docs[0].data() as Pedido;
       if (pedido.estado === 'ENTREGADO')
-        this.router.navigate(['propina']);
+        this.router.navigate(['acciones-entregado']);
       else
         if (param)
           this.router.navigate([route], { queryParams: { tipo: param } });
