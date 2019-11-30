@@ -1,4 +1,5 @@
 import { Detalle } from './detalle';
+import { Table } from './table';
 
 
 export class Pedido {
@@ -9,7 +10,7 @@ export class Pedido {
     total:number; 
     totalPropina:number; //precio final con propina incluida
 
-    numeroMesa: number;//no se persiste en la base
+    mesa: Table;//no se persiste en la base
     propina:number; //porcentaje de propina a aplicar
 
     constructor(idAuth: string,arrayDetalle:Array<Detalle>,estado:string,total:number) {

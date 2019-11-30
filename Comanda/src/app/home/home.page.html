@@ -37,6 +37,11 @@
     Ver encuestas
   </ion-button>
 
+  <ion-button *ngxPermissionsOnly="['CLIENTE']" color="primary" fill="outline" expand="block" (click)="confirmarRecepcion()"
+    class="top">
+    Recibí mi Pedido
+  </ion-button>
+
   <ion-button *ngxPermissionsOnly="['CLIENTE']" color="primary" fill="outline" expand="block" (click)="goTo('encuesta-respuesta')"
     class="top">
     Graficos
