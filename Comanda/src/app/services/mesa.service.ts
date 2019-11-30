@@ -39,4 +39,11 @@ export class MesaService {
       .get();
   }
 
+  public async DesocuparMesa(id: string) {
+    await this.firestore.doc('Mesas/' + id).set({
+      idAuth: '',
+      available: true
+    }, { merge: true });
+  }
+
 }

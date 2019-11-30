@@ -19,6 +19,7 @@ export class HomePage implements OnInit {
   rolUser: { id: string; idAuth: any; rol: any; }[];
   permiso: string;
   ocultarBtn: boolean;
+  pedido: Pedido;
 
   constructor(
     public router: Router,
@@ -38,6 +39,7 @@ export class HomePage implements OnInit {
     this.flushPermissions();
     this.loadPermissions();
     this.verificarListaEspera();
+    this.getPedido();
   }
 
   ngOnDestroy() {
@@ -115,6 +117,20 @@ export class HomePage implements OnInit {
   async verificarListaEspera() {
     let existe = await this.listaEsperaService.existeEnListaEspera(this.authService.currentUserId());
     existe.docs.length === 0 ? this.ocultarBtn = false : this.ocultarBtn = true;
+  }
+
+  async getPedido(){
+    const pedidoDoc = await this.pedidosService.getPedido(this.authService.currentUserId());
+    if (pedidoDoc && pedidoDoc.docs && pedidoDoc.docs[0] && pedidoDoc.docs[0].data()) {
+      this.pedido = pedidoDoc.docs[0].data() as Pedido;
+      this.pedido.id = pedidoDoc.docs[0].id;
+    }
+  }
+
+  confirmarRecepcion(){
+    this.pedidosService.SetEstado(this.pedido.id, 'ENTREGADO');
+    this.presentModalCustom('CONFIRMADO','BON APPETIT');
+
   }
 
 }

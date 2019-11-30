@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Pedido } from '../model/pedido';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/internal/operators/map';
+import { Detalle } from '../model/detalle';
 
 @Injectable({
   providedIn: 'root'
@@ -39,25 +40,43 @@ export class PedidosService {
     }, { merge: true });
   }
 
-  public getPedidosBase() {
-    return this.firestore.collection('Lista_Pedidos').snapshotChanges().pipe(map((clientes) => {
-      return clientes.map((a) => {
-        const data = a.payload.doc.data() as Pedido;
-        // data.id = a.payload.doc.id;
-        return data;
-      });
-    }));
+  public async UpdateArrayDetalle(pedido: Pedido) {
+    await this.firestore.doc('Lista_Pedidos/' + pedido.id).set({
+      arrayDetalle:JSON.stringify(pedido.arrayDetalle)
+    }, { merge: true });
   }
-  public async SetPropina(auxCliente: Pedido) {
-    console.log(auxCliente.idAuth);
 
-    await this.firestore.collection('Lista_Pedidos').ref.where('idAuth', '==', auxCliente.idAuth).get().then(async (documento) => {
-
-      console.log(documento.docs[0].id);
-      // console.log('EncontrÃ© el voto', votos.users);
-
-<<<<<<< HEAD
+public getPedidosBase() {
+  return this.firestore.collection('Lista_Pedidos').snapshotChanges().pipe(map((clientes) => {
+    return clientes.map((a) => {
+      const data = a.payload.doc.data() as Pedido;
+      // data.id = a.payload.doc.id;
+      return data;
+    });
+  }));
 }
+public async SetPropina(auxCliente:Pedido) {
+   console.log(auxCliente.idAuth);
+
+  await this.firestore.collection('Lista_Pedidos').ref.where('idAuth', '==', auxCliente.idAuth).get().then(async (documento) => {
+ 
+    console.log(documento.docs[0].id);
+    // console.log('EncontrÃ© el voto', votos.users);
+    
+    this.firestore.collection('Lista_Pedidos').doc(documento.docs[0].id).set({
+      arrayDetalle:auxCliente.arrayDetalle,
+      estado:auxCliente.estado,
+      idAuth:auxCliente.idAuth,
+      total:auxCliente.total,
+      propina:auxCliente.propina,
+      totalPropina: auxCliente.totalPropina
+    }//, { merge: true }
+    );
+    
+  });
+ 
+}
+
 public async SetEstadoJ(auxCliente:Pedido,estado:string) {
 
  await this.firestore.collection('Lista_Pedidos').ref.where('idAuth', '==', auxCliente.idAuth).get().then(async (documento) => {
@@ -78,19 +97,4 @@ public async SetEstadoJ(auxCliente:Pedido,estado:string) {
  });
 
 }
-=======
-      this.firestore.collection('Lista_Pedidos').doc(documento.docs[0].id).set({
-        arrayDetalle: auxCliente.arrayDetalle,
-        estado: auxCliente.estado,
-        idAuth: auxCliente.idAuth,
-        total: auxCliente.total,
-        propina: auxCliente.propina,
-        totalPropina: auxCliente.totalPropina
-      }//, { merge: true }
-      );
-
-    });
-
-  }
->>>>>>> hernan
 }
