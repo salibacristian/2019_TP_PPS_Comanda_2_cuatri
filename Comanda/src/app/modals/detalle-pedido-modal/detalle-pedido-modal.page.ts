@@ -18,6 +18,8 @@ import { Detalle } from 'src/app/model/detalle';
 export class DetallePedidoModalPage implements OnInit {
 
   @Input() pedido: Pedido;
+  currentRol: string;
+  auxArrayDetalle: Array<Detalle>;
 
   constructor(
     public router: Router,
@@ -58,20 +60,19 @@ export class DetallePedidoModalPage implements OnInit {
 
   filterList(){
     
-    var rol: string;
     this.authService.getRolwithEmail(this.authService.currentUserId()).subscribe(async (res: any) => {
       res.forEach(r => {
         if (r.idAuth == this.authService.currentUserId()) {
-          rol = r.rol;
+          this.currentRol = r.rol;
         }
       });
-      switch (rol) {
+      switch (this.currentRol) {
         case 'COCINERO':
-            this.pedido.arrayDetalle = this.pedido.arrayDetalle.filter(detalle =>
+            this.auxArrayDetalle = this.pedido.arrayDetalle.filter(detalle =>
               detalle.type == 'COMIDA');
           break;
         case 'BARTENDER':
-            this.pedido.arrayDetalle = this.pedido.arrayDetalle.filter(detalle =>
+            this.auxArrayDetalle = this.pedido.arrayDetalle.filter(detalle =>
               detalle.type == 'BEBIDA');
           break;
         default:
@@ -89,7 +90,16 @@ export class DetallePedidoModalPage implements OnInit {
   async cambiarEstadoDetalle(pedido: Pedido, detalle: Detalle, estado: string){
     var det = pedido.arrayDetalle.find(x => x.nombre == detalle.nombre);
     det.estado = estado;
-    await this.pedidosService.Update(pedido);
+    await this.pedidosService.UpdateArrayDetalle(pedido);
+    if(estado == 'EN PROGRESO'){
+      await this.pedidosService.SetEstado(pedido.id, 'EN PROGRESO');
+    }
+    else if(estado == 'TERMINADO' && !pedido.arrayDetalle.some(x => x.estado != 'TERMINADO')){
+
+      await this.pedidosService.SetEstado(pedido.id, 'TERMINADO');
+    }
+
+    this.dismiss();
 
   }
 

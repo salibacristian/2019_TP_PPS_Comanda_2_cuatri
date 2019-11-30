@@ -34,11 +34,10 @@ export class PedidosService {
     }, { merge: true });
   }
 
-  public async Update(pedido: Pedido) {
-    await this.firestore.doc('Lista_Pedidos/' + pedido.id).update(pedido)
-      // .then(doc => {
-      //   return this.listEsperaMesaService.deleteCliente(idAuth);
-      // });
+  public async UpdateArrayDetalle(pedido: Pedido) {
+    await this.firestore.doc('Lista_Pedidos/' + pedido.id).set({
+      arrayDetalle:JSON.stringify(pedido.arrayDetalle)
+    }, { merge: true });
   }
 
 public getPedidosBase() {
