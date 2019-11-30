@@ -1,9 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Pedido } from '../../model/pedido';
+import { Table } from '../../model/table';
 import { ModalController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { PedidosService } from '../../services/pedidos.service';
+import { MesaService } from '../../services/mesa.service';
 import { AuthService } from '../../services/auth.service';
+import { Detalle } from 'src/app/model/detalle';
 
 
 @Component({
@@ -21,7 +24,8 @@ export class DetallePedidoModalPage implements OnInit {
     public alertController: AlertController,
     public modalController: ModalController,
     private pedidosService: PedidosService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private mesaService: MesaService) { }
 
   ngOnInit() {
     this.filterList();
@@ -74,6 +78,19 @@ export class DetallePedidoModalPage implements OnInit {
           break;
       }
     });
+  }
+
+  cerrarMesa(pedido: Pedido){
+    this.cambiarEstado(pedido, 'PAGADO');
+    this.mesaService.DesocuparMesa(pedido.mesa.id);
+    
+  }
+
+  async cambiarEstadoDetalle(pedido: Pedido, detalle: Detalle, estado: string){
+    var det = pedido.arrayDetalle.find(x => x.nombre == detalle.nombre);
+    det.estado = estado;
+    await this.pedidosService.Update(pedido);
+
   }
 
 }

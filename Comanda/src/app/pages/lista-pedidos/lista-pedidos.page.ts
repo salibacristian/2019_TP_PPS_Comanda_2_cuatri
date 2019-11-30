@@ -6,6 +6,7 @@ import { PedidosFilter } from '../../model/pedidosFilter';
 import { ModalController, AlertController } from '@ionic/angular';
 import { DetallePedidoModalPage } from '../../modals/detalle-pedido-modal/detalle-pedido-modal.page';
 import { AuthService } from '../../services/auth.service';
+import { Table } from 'src/app/model/table';
 
 @Component({
   selector: 'app-lista-pedidos',
@@ -37,8 +38,8 @@ export class ListaPedidosPage implements OnInit {
         var detalleStr = pedido.arrayDetalle.toString();
         pedido.arrayDetalle = JSON.parse(detalleStr);
         mesaService.getTableByClient(pedido.idAuth).then(mesas => {
-          var mesa = mesas.docs[0].data();
-          pedido.numeroMesa = mesa.number;
+          var mesa: Table = mesas.docs[0].data() as Table;
+          pedido.mesa = mesa;
         });
       });
     });

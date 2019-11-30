@@ -4,6 +4,7 @@ export class Detalle {
     cantidad:number;
     type:string;
     subtotal:number;
+    estado: string;
 
     constructor(nombre,precio,cantidad,type,subtotal) {
         this.nombre = nombre;

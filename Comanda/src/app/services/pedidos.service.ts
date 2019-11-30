@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Pedido } from '../model/pedido';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/internal/operators/map';
+import { Detalle } from '../model/detalle';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,13 @@ export class PedidosService {
     await this.firestore.doc('Lista_Pedidos/' + id).set({
       estado: estado
     }, { merge: true });
+  }
+
+  public async Update(pedido: Pedido) {
+    await this.firestore.doc('Lista_Pedidos/' + pedido.id).update(pedido)
+      // .then(doc => {
+      //   return this.listEsperaMesaService.deleteCliente(idAuth);
+      // });
   }
 
 public getPedidosBase() {
