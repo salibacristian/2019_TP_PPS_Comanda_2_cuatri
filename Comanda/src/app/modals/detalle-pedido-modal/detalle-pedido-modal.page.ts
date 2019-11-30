@@ -75,6 +75,9 @@ export class DetallePedidoModalPage implements OnInit {
             this.auxArrayDetalle = this.pedido.arrayDetalle.filter(detalle =>
               detalle.type == 'BEBIDA');
           break;
+          case 'MOZO':
+            this.auxArrayDetalle = this.pedido.arrayDetalle;
+          break;
         default:
           break;
       }
