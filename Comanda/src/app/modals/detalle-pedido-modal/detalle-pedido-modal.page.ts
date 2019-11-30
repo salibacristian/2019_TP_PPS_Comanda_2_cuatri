@@ -3,6 +3,7 @@ import { Pedido } from '../../model/pedido';
 import { ModalController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { PedidosService } from '../../services/pedidos.service';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -19,9 +20,11 @@ export class DetallePedidoModalPage implements OnInit {
     public router: Router,
     public alertController: AlertController,
     public modalController: ModalController,
-    private pedidosService: PedidosService) { }
+    private pedidosService: PedidosService,
+    private authService: AuthService) { }
 
   ngOnInit() {
+    this.filterList();
   }
 
   async cambiarEstado(pedido: Pedido, estado: string) {
@@ -48,6 +51,31 @@ export class DetallePedidoModalPage implements OnInit {
 
     this.dismiss();
   }
+
+  filterList(){
+    
+    var rol: string;
+    this.authService.getRolwithEmail(this.authService.currentUserId()).subscribe(async (res: any) => {
+      res.forEach(r => {
+        if (r.idAuth == this.authService.currentUserId()) {
+          rol = r.rol;
+        }
+      });
+      switch (rol) {
+        case 'COCINERO':
+            this.pedido.arrayDetalle = this.pedido.arrayDetalle.filter(detalle =>
+              detalle.type == 'COMIDA');
+          break;
+        case 'BARTENDER':
+            this.pedido.arrayDetalle = this.pedido.arrayDetalle.filter(detalle =>
+              detalle.type == 'BEBIDA');
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
 }
 
 
